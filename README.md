@@ -6,7 +6,7 @@
 
 kubernetes_admin 使用 Python / Django 进行开发,使用了vue做为前端驱动，配置了web Terminal 功能.
 
-注: [www.sadlar.cn](http://www.sadlar.cn) 是我的博客,欢迎关注。
+注: [www.unicode.vip](http://www.unicode.vip) 是我的博客,欢迎关注。
 
 ## 核心功能列表
 
