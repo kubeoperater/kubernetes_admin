@@ -1,0 +1,63 @@
+<div class="input-group search-group pull-left">
+    <input list="applist" type="text" class="form-control" placeholder={{ search_keys|default:"搜索pod应用"}} id="search-keywords">
+    <datalist id="applist">
+      {% for  lable  in labels %}
+        <option value={{ lable }}>
+      {% endfor %}
+    </datalist>
+    <span class="input-group-btn"><button class="btn btn-primary" onclick="searchresult()"><i class="fa fa-search"></i></button></span>
+</div>
+<table class="table table-bordered table-striped table-hover">
+<thead>
+<tr>
+    <th scope="col" class="sortable" style="color: #428bca">操作</th>
+    <th scope="col" class="sortable">
+        <div
+                class="dropdown pull-left"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            容器名称 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 容器ip </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 所在主机 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 所在命名空间 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 生成时间 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 镜像名称 </a></div>
+    </th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for items in messages %}
+    <tr class="grid-item">
+        <td>
+            <a href="/k8sapp/connectpod?k8s_namespaces={{ items.pod_namespace }}&k8s_apiport={{ k8s_apiport }}&k8s_pod={{ items.pod_name }}&container_name_list={{ items.container_name_list }}"
+               target="_blank">
+                <img title="SSH" src="/static/icons/ssh.png"/></a>
+            <a href="/k8sapp/podlogpage?k8s_namespaces={{ items.pod_namespace }}&k8s_apiport={{ k8s_apiport }}&k8s_pod={{ items.pod_name }}&container_name_list={{ items.container_name_list }}"
+               target="_blank">
+                <i title="LOG" class="fa-fw fa fa-file-text-o"></i></a>
+        </td>
+        <td>{{ items.pod_name }}</td>
+        <td>{{ items.pod_ip }}</td>
+        <td>{{ items.host_ip }}</td>
+        <td>{{ items.pod_namespace }}</td>
+        <td>{{ items.pod_creatime }}</td>
+        <td>{{ items.img_rel }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>

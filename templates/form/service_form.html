@@ -1,0 +1,51 @@
+<div class="input-group search-group pull-left">
+    <input list="applist" type="text" class="form-control" placeholder={{ search_keys|default:"搜索服务"}} id="search-keywords">
+    <datalist id="applist">
+      {% for  lable  in labels %}
+        <option value={{ lable }}>
+      {% endfor %}
+    </datalist>
+    <span class="input-group-btn"><button class="btn btn-primary" onclick="searchresult()"><i class="fa fa-search"></i></button></span>
+</div>
+<table class="table table-bordered table-striped table-hover">
+<thead>
+<tr>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 服务名称 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 服务ip </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">所在命名空间</a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 创建时间 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 后端服务标签 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 服务类型 </a></div>
+    </th>
+</tr>
+</thead>
+<tbody>
+{% for items in messages %}
+    <tr class="grid-item">
+        <td>{{ items.svc_name }}</td>
+        <td>{{ items.svc_ip }}</td>
+        <td>{{ items.svc_namespace }}</td>
+        <td>{{ items.create_time }}</td>
+        <td>{{ items.labels }}</td>
+        <td>{{ items.svc_type }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>

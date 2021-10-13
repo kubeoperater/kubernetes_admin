@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-redis
+  namespace: ops
+  labels:
+    k8s-app: celery-redis
+spec:
+  selector:
+    matchLabels:
+      k8s-app: celery-redis
+  template:
+    metadata:
+      name: celery-redis
+      labels:
+        k8s-app: celery-redis
+    spec:
+      containers:
+      - name: celery-redis
+        image: harbor-pro.unicode.com/base/redis:latest
+        command:
+          - "redis-server"
+        imagePullPolicy: IfNotPresent
+      dnsConfig:
+        nameservers:
+          - 10.10.0.200
+          - 10.10.0.11
+        options:
+          - name: ndots
+            value: "2"
+          - name: edns0
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    k8s-app: kubernetes-manager
+  name: kubernetes-manager
+  namespace: kube-system
+spec:
+  serviceName: kubernetes-manager
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s-app: kubernetes-manager
+  template:
+    metadata:
+      labels:
+        k8s-app: kubernetes-manager
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - k8s-yz-master01
+                - k8s-yz-master02
+                - k8s-yz-master03
+      containers:
+      - image: harbor-pro.unicode.com/ops/kubernetes-mng:v1.8
+        imagePullPolicy: Always
+        name: kubernetes-manager
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+      imagePullSecrets:
+      - name: admin
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

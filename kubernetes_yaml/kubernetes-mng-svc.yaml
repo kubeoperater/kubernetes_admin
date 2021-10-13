@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: kubernetes-manager
+  name: kubernetes-mng-lb
+  namespace: ops
+spec:
+  clusterIP: 10.66.197.12
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    k8s-app: kubernetes-manager
+  type: ClusterIP
+status:
+  loadBalancer: {}

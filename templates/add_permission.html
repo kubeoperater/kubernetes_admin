@@ -1,0 +1,71 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% load xadmin_tags %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% block nav_title %}{% if model_icon %}<i class="{{model_icon}}"><sub class="fa fa-{% if add%}plus{%else%}pencil{%endif%}"></sub></i> {% endif %}
+{{ title }}{% endblock %}
+
+{% block content %}
+
+<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}
+  {% block form_top %}{% endblock %}
+  {% view_block 'form_top' %}
+
+  {% if errors %}
+      <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+      {{ errors }}
+      </div>
+  {% endif %}
+  <div class="form-container row clearfix" >
+      <div class="formColumn column form-column full col col-sm-12 form-horizontal ui-sortable" span="12" horizontal="">
+          <div class="panel panel-default fieldset unsort no_title">
+              <div class="panel-heading">
+                  <i class="icon fa fa-chevron-up chevron"></i>
+                  <h3 class="panel-title"></h3>
+              </div>
+              <div class="panel-body ">
+                  <div id="div_id_user_name" class="form-group">
+                      <label for="id_user_name" class="control-label  requiredField">用户名<span class="asteriskField">*</span></label>
+                      <div class="controls">
+                           {% if form.user_name.errors %}
+                            <td>{{ error }}</td>
+                           {% endif %}
+                          {{ form.user_name|add_class:"adminselectwidget form-control" }}
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="id_k8s_api" class="control-label  requiredField">K8s集群<span class="asteriskField">*</span></label>
+                      <div class="controls">
+                          {% if form.k8s_api.errors %}
+                            <td>{{ error }}</td>
+                           {% endif %}
+                          {{ form.k8sapi|add_class:"adminselectwidget form-control" }}
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="id_namespace" class="control-label  requiredField">K8s命名空间<span class="asteriskField">*</span></label>
+                      <div class="controls">
+                          {% if form.namespace.errors %}
+                               <div class="alert alert-danger alert-dismissable">
+                               <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                   {{ form.namespace.errors }}</div>
+                          {% endif %}
+                          <select name="namespace" class="adminselectwidget form-control selectized" id="id_namespace">
+
+                          </select>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% block submit_buttons_bottom %}{% include "xadmin/includes/submit_line.html" %}{% endblock %}
+</form>
+{% endblock %}

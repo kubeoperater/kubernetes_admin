@@ -1,0 +1,71 @@
+{% extends 'xadmin/base_site.html' %}
+{% load i18n xadmin_tags %}
+
+{% block content %}
+
+
+    {% block content-nav %}
+    {% endblock %}
+
+    <div class="navbar content-navbar navbar-default navbar-xs">
+        <div class="col-sm-3 control-label">
+            <label>k8s集群:</label>
+            <select name="k8s" class="selectpicker show-tick form-control"
+                    data-live-search="true" id="select-k8s" onchange="selectNamespaces()">
+                <option value="">选择k8s集群</option>
+                {% for row in results %}
+                    <option value={{ row.object.id }}>{{ row.object }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-sm-3 control-label">
+            <label>namespace:</label>
+            <select class="selectpicker show-tick form-control"
+                    data-live-search="true" id="select-namesapces">
+                <option value="">选择namespace</option>
+            </select>
+        </div>
+        <input type="hidden" id="select-kind" name="selectkind" value="deployment">
+
+        <div class="control-label" style="margin: 15px">
+            <button onclick="submite_select(1)" class="btn btn-primary">查询</button>
+        </div>
+
+    </div>
+    <div class="col-lg-pull-5 pull-left">
+        <ul class="pagination pagination-sm pagination-left pagination-inline" id="resultPagesplit">
+
+        </ul>
+    </div>
+    <form id="changelist-form" action="/k8sapp/deletedeploy" method="post">
+    {% csrf_token %}
+    <div class="results table-responsive">
+        <table class="table table-bordered table-striped table-hover" id="resultAlert">
+        </table>
+    </div>
+    <div class="form-actions well well-sm" style="display:none" id="selectaction">
+        <input type="hidden" id="action" name="action" value="">
+        <input type="hidden" id="select-across" name="select_across" value="0">
+        <div class="btn-group clearfix dropup">
+            <a class="dropdown-toggle btn btn-success" data-toggle="dropdown" href="#">
+                <i class="fa fa-wrench"></i>
+                <span class="action-counter">删除选中的记录</span>
+                <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+
+                <li><a onclick="$.do_action('delete_selected');"><i class="fa fa-times"></i> 删除所选的部署</a></li>
+
+            </ul>
+        </div>
+
+
+        <script type="text/javascript">var _actions_icnt = "1";</script>
+    </div>
+    </form>
+
+    <script type="text/javascript" src="/static/xadmin/vendor/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/static/customs/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/customs/js/kubernetes.js"></script>
+
+{% endblock %}

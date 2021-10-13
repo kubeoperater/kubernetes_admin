@@ -1,0 +1,19 @@
+.idea
+*.pyc
+.DS_Store
+venv/*
+venv/
+*/*.pyc.DS_Store
+kubernetes_web/node_modules/*
+kubernetes_web/npm-debug.log*
+kubernetes_web/yarn-debug.log*
+kubernetes_web/yarn-error.log*
+kubernetes_web/package-lock.json
+kubernetes_web/tests/**/coverage/
+kubernetes_web/dist/*
+# Editor directories and files
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

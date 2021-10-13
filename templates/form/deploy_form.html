@@ -1,0 +1,41 @@
+<thead>
+<tr>
+    <th scope="col" class="action-checkbox-column">
+        <input type="checkbox" id="action-toggle">
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 所在命名空间 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 部署名称 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 生成时间 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 镜像名称 </a></div>
+    </th>
+    <th scope="col" class="sortable">
+        <div class="dropdown pull-left">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 容器列表 </a></div>
+    </th>
+</tr>
+</thead>
+<tbody>
+{% for items in messages %}
+    <tr class="grid-item">
+        <td class="action-checkbox"><input type="checkbox" name="_selected_action" value="{{ items.dep_name }}"
+                                           class="action-select"></td>
+        <td>{{ items.dep_namespace }}</td>
+        <td>{{ items.dep_name }}</td>
+        <td>{{ items.dep_creatime }}</td>
+        <td>{{ items.img_rel }}</td>
+        <td>{{ items.container_name_list }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+

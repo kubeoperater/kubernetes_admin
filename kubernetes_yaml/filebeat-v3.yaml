@@ -1,0 +1,37 @@
+apiVersion: v1
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+    - type: log
+      enabled: true
+      encoding: utf8
+      paths:
+        - /export/log/${appname}/${HOSTNAME}/*.log*
+      tags: "ops_k8s_manager"
+      fields:
+        MY_NODE_NAME: ${MY_NODE_NAME}
+        MY_POD_NAME: ${MY_POD_NAME}
+        MY_POD_IP: ${MY_POD_IP}
+        MY_POD_NAMESPACE: ${MY_POD_NAMESPACE}
+      json.keys_under_root: true
+      json.overwrite_keys: true
+      exclude_files: ['.gz$']
+    setup.template.settings:
+      index.number_of_shards: 1
+    output.kafka:
+      hosts: ["10.10.53.53:9092","10.10.53.54:9092","10.10.53.55:9092"]
+      topic: "ops-log"
+      partition.round_robin:
+        reachable_only: false
+      required_acks: 1
+      compression: gzip
+      max_message_bytes: 1000000
+    rotateeverybytes: 10485760
+    http.enabled: true
+    http.host: ${MY_POD_IP}
+    http.port: 5066
+kind: ConfigMap
+metadata:
+  annotations:
+  name: filebeat-v2
+  namespace: ops

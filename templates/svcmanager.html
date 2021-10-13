@@ -1,0 +1,52 @@
+{% extends 'xadmin/base_site.html' %}
+{% load i18n xadmin_tags %}
+
+{% block content %}
+
+
+    {% block content-nav %}
+    {% endblock %}
+    {% if errors %}
+        <div class="alert alert-danger alert-dismissable" id="error_message">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ errors }}
+        </div>
+    {% endif %}
+
+    <div class="navbar content-navbar navbar-default navbar-xs">
+
+        <div class="col-sm-3 control-label">
+            <label>k8s集群:</label>
+            <select name="k8s" class="selectpicker show-tick form-control"
+                    data-live-search="true" id="select-k8s" onchange="selectNamespaces()">
+                {% for row in results %}
+                    <option value={{ row.object.id }}>{{ row.object }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-3 control-label">
+            <label>namespace:</label>
+            <select class="selectpicker show-tick form-control"
+                    data-live-search="true" id="select-namesapces">
+            </select>
+        </div>
+        <input type="hidden" id="select-kind" name="selectkind" value="service">
+
+        <div class="navbar-btn pull-left" style="margin: 15px">
+            <button onclick="submite_select(1)" class="btn btn-primary " type="submit">查询</button>
+        </div>
+
+    </div>
+
+    <div class="results table-responsive" id="resultAlert">
+    </div>
+    <div class="col-lg-pull-5 pull-left">
+        <ul class="pagination pagination-sm pagination-left pagination-inline" id="resultPagesplit">
+        </ul>
+    </div>
+    <script type="text/javascript">var _actions_icnt = "1";</script>
+    <script type="text/javascript" src="/static/xadmin/vendor/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/static/customs/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/customs/js/kubernetes.js"></script>
+    <script type="text/javascript">window.οnlοad=selectNamespaces()</script>
+{% endblock %}

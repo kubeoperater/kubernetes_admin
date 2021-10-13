@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: kubernetes-manager
+  name: kubernetes-manager
+  namespace: ops
+spec:
+  minReadySeconds: 50
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s-app: kubernetes-manager
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        k8s-app: kubernetes-manager
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - k8s-yz-master01
+                - k8s-yz-master02
+                - k8s-yz-master03
+      containers:
+      - name: kubernetes-manager
+        image:  harbor-pro.unicode.com/ops/kubernetes-mng:20200115173050
+        env:
+        - name: APPNAME
+          value: kubernetes-manager
+        - name: APPENV
+          value: "yz"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: logdir
+          mountPath: /export/log/
+      - name: filebeat-agent
+        image: harbor-pro.unicode.com/base/filebeat-kafka:7.2.0
+        imagePullPolicy: Always
+        env:
+        - name: appname
+          value: kubernetes-manager
+        - name: release_version
+          value: "20200115173050"
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        volumeMounts:
+        - name: logdir
+          mountPath: /export/log/
+        - name: filebeat-yaml
+          mountPath: /opt/
+      volumes:
+        - name: logdir
+          persistentVolumeClaim:
+            claimName: kubernetes-manager-ops-pvc
+        - name: filebeat-yaml
+          configMap:
+            name: filebeat-v2
+            defaultMode: 0644
+      dnsConfig:
+        nameservers:
+          - 10.10.0.200
+          - 10.10.0.11
+        options:
+          - name: ndots
+            value: "2"
+          - name: edns0
+      imagePullSecrets:
+      - name: admin
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
